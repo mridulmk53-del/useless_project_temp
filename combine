@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Door</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        #container {
+            text-align: center;
+            position: relative;
+        }
+
+        .door-wrapper {
+            perspective: 1000px;
+            margin-bottom: 40px;
+        }
+
+        .door {
+            width: 200px;
+            height: 300px;
+            background: linear-gradient(90deg, #8b4513 0%, #d2691e 100%);
+            border: 3px solid #654321;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.6s ease;
+            transform-style: preserve-3d;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.1);
+            user-select: none;
+            margin: 0 auto 30px;
+            perspective: 1000px;
+        }
+
+        .door:hover {
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), inset 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .door.open {
+            transform: rotateY(120deg);
+        }
+
+        .door-frame {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s ease-in-out;
+            transform-style: preserve-3d;
+        }
+
+        .door.open .door-frame {
+            transform: rotateY(120deg);
+        }
+
+        .door-panel {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
+            border: 3px solid #654321;
+            border-radius: 10px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(0, 0, 0, 0.3);
+            backface-visibility: hidden;
+        }
+
+        .door-handle,
+        .door-knob {
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at 30% 30%, #FFD700, #DAA520);
+            border-radius: 50%;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: inset -2px -2px 5px rgba(0, 0, 0, 0.3), 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .door:hover .door-handle,
+        .door:hover .door-knob {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .message,
+        .instruction {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            min-height: 30px;
+            animation: fadeIn 0.6s ease-in;
+            margin-top: 30px;
+        }
+
+        .counter {
+            font-size: 16px;
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: inline-block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .celebration {
+            animation: bounce 0.6s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .final-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            padding: 40px 60px;
+            border-radius: 10px;
+            font-size: 24px;
+            border: 2px solid #ffd700;
+            z-index: 1000;
+            animation: fadeInScale 0.5s ease;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .door {
+                width: 150px;
+                height: 225px;
+            }
+
+            .final-message {
+                padding: 30px 40px;
+                font-size: 18px;
+            }
+
+            .message,
+            .instruction {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div class="door-wrapper">
+            <div class="door" id="door">
+                <div class="door-frame">
+                    <div class="door-panel"></div>
+                    <div class="door-knob"></div>
+                </div>
+            </div>
+        </div>
+        <p class="instruction" id="instruction">Click the door</p>
+        <p class="message" id="message"></p>
+        <p class="counter" id="counter">Doors opened: 0</p>
+    </div>
+
+    <script>
+        let clickCount = 0;
+        const MAX_CLICKS = 20; // Adjust this for difficulty
+
+        const doorElement = document.getElementById('door');
+        const messageElement = document.getElementById('message');
+        const counterElement = document.getElementById('counter');
+
+        const messages = [
+            'You opened a door...',
+            'Another door appears.',
+            'And another one.',
+            'How many doors are there?',
+            'This is getting repetitive.',
+            'Are you having fun?',
+            'Really?',
+            'Keep going...',
+            'Almost there...',
+            'One more...'
+        ];
+
+        doorElement.addEventListener('click', () => {
+            clickCount++;
+            doorElement.classList.add('open');
+
+            // Update counter
+            counterElement.textContent = `Doors opened: ${clickCount}`;
+
+            // Display message
+            if (clickCount <= MAX_CLICKS) {
+                messageElement.textContent = messages[clickCount - 1] || `Click #${clickCount}`;
+            } else {
+                messageElement.textContent = '🎉 Congratulations. You have achieved nothing. 🎉', Play again to achieve nothing once again ;
+                messageElement.classList.add('celebration');
+                counterElement.classList.add('celebration');
+                doorElement.style.pointerEvents = 'none';
+                return;
+            }
+
+            // Reset door animation
+            setTimeout(() => {
+                doorElement.classList.remove('open');
+            }, 600);
+        });
+
+        // Initial message
+        messageElement.textContent = 'Click the door...';
+    </script>
+</body>
+</html>

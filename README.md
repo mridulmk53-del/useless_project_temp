@@ -2,34 +2,37 @@
 
 
 
-# [Project Name] 🎯
+# [Virtual Door] 🎯
 
 
 ## Basic Details
-### Team Name: [Name]
+### Team Name: [Super Nova]
 
 
 ### Team Members
-- Team Lead: [Name] - [College]
-- Member 2: [Name] - [College]
-- Member 3: [Name] - [College]
+- Team Lead: [Alfiya Jinna M] - [Al-Azhar College of Engineering & Technology]
+- Member 2: [Mridul MK] - [Al-Azhar College of Engineering & Technology]
 
 ### Project Description
-[2-3 lines about what your project does]
+[Virtual Door
+Description:
+Virtual Door is a simple and entertaining application where users keep opening virtual doors. Every door leads to another door, creating an endless cycle of clicking with absolutely no useful purpose. The project is designed purely for fun and humor.
+Tagline:
+“Open. Repeat. Achieve Nothing.” 🚪😂]
 
 ### The Problem (that doesn't exist)
-[What ridiculous problem are you solving?]
+[People spend too much time trying to achieve meaningful things. There is currently no efficient way to waste that time by repeatedly opening completely useless virtual doors]
 
 ### The Solution (that nobody asked for)
-[How are you solving it? Keep it fun!]
+[An endless virtual door system that turns clicking into a completely useless achievement]
 
 ## Technical Details
 ### Technologies/Components Used
 For Software:
-- [Languages used]
-- [Frameworks used]
-- [Libraries used]
-- [Tools used]
+- [html,css,js]
+- [Bootstrap]
+- [Animated.css]
+- [Github]
 
 For Hardware:
 - [List main components]
